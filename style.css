@@ -1,0 +1,95 @@
+* {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+:root {
+    --primeryFontColor: black;
+    --primeryBackgroundColor: white;
+    --primertBtnColor: rgb(206, 206, 206);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("pics/hogwartsschool.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.darkmode{
+    background-image: url("pics/hogwartsschool-dark.jpg");
+
+}
+#btn-switch{
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--primeryBackgroundColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+/* #btn-switch svg{
+    fill: var(--primeryBackgroundColor)
+} */
+#btn-switch svg:last-child{
+    display: none;
+}
+.darkmode #btn-switch svg:first-child{
+    display: none;
+}
+.darkmode #btn-switch svg:last-child{
+    display: block;
+}
+.container{
+    width: 400px;
+    max-width: 80%;
+    background-color: var(--primeryBackgroundColor);
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 10px 2px;
+   
+}
+
+.btn-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.btn {
+    background-color: var(--primertBtnColor); 
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: var(--primeryFontColor);
+    outline: none;
+}
+
+.btn:hover {
+    border-color: blue;
+}
+
+.start-btn, .next-btn {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px 20px;
+
+}
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hide {
+    display: none;
+}
