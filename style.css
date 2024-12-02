@@ -5,6 +5,9 @@
     --primeryFontColor: black;
     --primeryBackgroundColor: white;
     --primertBtnColor: rgb(206, 206, 206);
+    --secondaryBackgroun: white;
+    --correctColor: limegreen;
+    --wrongColor: red;
 }
 
 body {
@@ -21,6 +24,9 @@ body {
 }
 .darkmode{
     background-image: url("pics/hogwartsschool-dark.jpg");
+    /* --primeryFontColor: white;
+    --primeryBackgroundColor: black;
+    --primertBtnColor: rgb(206, 206, 206); */
 
 }
 #btn-switch{
@@ -37,7 +43,7 @@ body {
     right: 20px;
 }
 /* #btn-switch svg{
-    fill: var(--primeryBackgroundColor)
+    fill: var(--secondaryBackgroundColor)
 } */
 #btn-switch svg:last-child{
     display: none;
@@ -55,6 +61,7 @@ body {
     border-radius: 5px;
     padding: 10px;
     box-shadow: 0 0 10px 2px;
+    color: var(--primeryFontColor);
    
 }
 
@@ -76,6 +83,14 @@ body {
 
 .btn:hover {
     border-color: blue;
+}
+
+.btn.correct {
+background-color: var(--correctColor);
+}
+
+.btn.wrong {
+    background-color: var(--wrongColor);
 }
 
 .start-btn, .next-btn {

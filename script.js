@@ -1,112 +1,140 @@
-//Sätter darkmode
+// Dark mode
 let darkmode = localStorage.getItem("darkmode");
 const btnSwitch = document.querySelector("#btn-switch");
 
 const enableDarkmode = () => {
-    document.body.classList.add("darkmode")
-    localStorage.setItem("darkmode", "active")
-}
+    document.body.classList.add("darkmode");
+    localStorage.setItem("darkmode", "active");
+};
 
 const disableDarkmode = () => {
-    document.body.classList.remove("darkmode")
-    localStorage.setItem("darkmode", null)
-}
+    document.body.classList.remove("darkmode");
+    localStorage.setItem("darkmode", null);
+};
 
-if(darkmode === "active") enableDarkmode()
+if (darkmode === "active") enableDarkmode();
 
 btnSwitch.addEventListener("click", () => {
-    darkmode = localStorage.getItem("darkmode")
-    darkmode !== "active" ? enableDarkmode (): disableDarkmode ()
-})
+    darkmode = localStorage.getItem("darkmode");
+    darkmode !== "active" ? enableDarkmode() : disableDarkmode();
+});
 
-
+// Quiz
 const startBtn = document.querySelector("#start-btn");
+const nextBtn = document.querySelector("#next-btn");
 const questionContainer = document.querySelector("#question-container");
 const questionElement = document.querySelector("#question");
 const answerBtn = document.querySelector("#answer-buttons");
 
+let shuffledQuestions, currentQuestionIndex
+
 const questions = [
     {
-        question: "Vad heter Harry i efternamn?",
+        question: "Vilket hus blir Harry sorterad i vid Hogwarts?",
         answers: [
-            { text: "Potter", correct: true },
-            { text: "Granger", correct: false }
+            { text: "Gryffindor", correct: true },
+            { text: "Slytherin", correct: false }
         ]
     },
     {
-        qusetion: "text",
+        question: "Är Severus Snape en medlem av Dödsätarna?",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "Ja", correct: true },
+            {text: "Nej", correct: false}
         ]
     },
     {
-        qusetion: "text",
+        question: "Vad är Dobby?",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "En husalf", correct: true },
+            {text: "En råtta", correct: false}
         ]
     },
     {
-        qusetion: "text",
+        question: "Hur många Harry Potter filmer finns det?",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "8", correct: true },
+            {text: "7", correct: false}
         ]
     },
     {
-        qusetion: "text",
+        question: "Vilken är den sista reliken som Harry Potter hittar?",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "Äldrestenen", correct: true },
+            {text: "Osynlighetsmanteln", correct: false},
+            {text: "Fläderstaven", correct: false},
+            {text: "Snitchbollen", correct: false}
         ]
     },
     {
-        qusetion: "text",
+        question: "Vad heter den trehövdade hunden som vaktar De vises sten?",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "Rex", correct: true },
+            {text: "Argos", correct: false},
+            {text: "Cerberus", correct: false},
+            {text: "Fluffy", correct: false}
         ]
     },
     {
-        qusetion: "text",
+        question: "Vad heter Harrys uggla?",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "Hedwig", correct: true },
+            {text: "Errol", correct: false},
+            {text: "Pigwidgeon", correct: false},
+            {text: "Fawkes", correct: false}
         ]
     },
     {
-        qusetion: "text",
+        question: "Vilka av dessa är medlemmar i Dumbledores armé? (Finns fler än 1 rätt svar)",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "Hermione Granger", correct: true },
+            {text: "Neville Longbottom", correct: false},
+            {text: "Draco Malfoy", correct: false},
+            {text: "Bellatrix Lestrange", correct: false}
         ]
     },
     {
-        qusetion: "text",
+        question: "Vilka av dessa är Horrokruxer? (Finns fler än 1 rätt svar)",
         answers: [
-            {text: "text", correct: true },
-            {text: "test", correct: false}
+            {text: "Tom Riddles dagbok", correct: true },
+            {text: "Fläderstaven", correct: false},
+            {text: "Harry Potter", correct: false},
+            {text: "Salazar Slytherins medaljong", correct: false}
+        ]
+    },
+    {
+        question: "Vilka djur kan ses som patronusformer i filmerna? (Finns fler än 1 rätt svar)",
+        answers: [
+            {text: "Hjort", correct: true },
+            {text: "Utter", correct: false},
+            {text: "Fenix", correct: false},
+            {text: "Varg", correct: false}
         ]
     }
 
 ];
 
 startBtn.addEventListener("click", startGame);
+nextBtn.addEventListener("click", () => {
+    currentQuestionIndex++
+    setNextQuestion()
+})
 
 function startGame() {
     startBtn.classList.add("hide");
+    shuffledQuestions = questions.sort(() => Math.random() - .5)
+    currentQuestionIndex = 0;
     questionContainer.classList.remove("hide");
     setNextQuestion();
 }
 
 function setNextQuestion() {
-    showQuestion(questions[0]);
+    resetState();
+    showQuestion(shuffledQuestions[currentQuestionIndex]);
 }
 
 function showQuestion(question) {
     questionElement.innerText = question.question;
-    // answerBtn.innerHTML = ""; // Rensar tidigare svar
     question.answers.forEach(answer => {
         const button = document.createElement("button");
         button.innerText = answer.text;
@@ -119,15 +147,42 @@ function showQuestion(question) {
     });
 }
 
+function resetState() {
+    clearStatusClass(document.body)
+    nextBtn.classList.add("hide");
+    while (answerBtn.firstChild) {
+        answerBtn.removeChild(answerBtn.firstChild);
+    }
+}
+
 function selectAnswer(e) {
     const selectedButton = e.target;
     const correct = selectedButton.dataset.correct === "true";
+    setStatusClass(document.body, correct);
     if (correct) {
         console.log("Correct answer!");
     } else {
         console.log("Wrong answer.");
     }
     Array.from(answerBtn.children).forEach(button => {
-        button.disabled = true;
+        setStatusClass(button, button.dataset.correct);
     });
+    if (shuffledQuestions.length > currentQuestionIndex + 1){
+        nextBtn.classList.remove("hide");
+    }
+   
+};
+
+function setStatusClass(element, correct) {
+    clearStatusClass(element)
+    if (correct) {
+        element.classList.add("correct");
+    } else {
+        element.classList.add("wrong");
+    }
+}
+
+function clearStatusClass (element) {
+    element.classList.remove("correct");
+    element.classList.remove("wrong");
 }
