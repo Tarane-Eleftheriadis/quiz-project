@@ -24,9 +24,9 @@ body {
 }
 .darkmode{
     background-image: url("pics/hogwartsschool-dark.jpg");
-    /* --primeryFontColor: white;
+    --primeryFontColor: white;
     --primeryBackgroundColor: black;
-    --primertBtnColor: rgb(206, 206, 206); */
+    --primertBtnColor: rgb(102, 102, 102);
 
 }
 #btn-switch{
@@ -59,9 +59,10 @@ body {
     max-width: 80%;
     background-color: var(--primeryBackgroundColor);
     border-radius: 5px;
-    padding: 10px;
+    padding: 40px;
     box-shadow: 0 0 10px 2px;
     color: var(--primeryFontColor);
+    font-size: 1.5rem;
    
 }
 
@@ -73,10 +74,11 @@ body {
 }
 
 .btn {
+    font-size: 1rem;
     background-color: var(--primertBtnColor); 
     border: none;
     border-radius: 5px;
-    padding: 5px 10px;
+    padding: 10px 20px;
     color: var(--primeryFontColor);
     outline: none;
 }
@@ -108,3 +110,11 @@ background-color: var(--correctColor);
 .hide {
     display: none;
 }
+#result-container {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--primeryBackgroundColor);
+    border-radius: 5px;
+    box-shadow: 0 0 10px 2px;
+    color: var(--primeryFontColor);
+};

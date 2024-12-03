@@ -160,17 +160,16 @@ function selectAnswer(e) {
     const correct = selectedButton.dataset.correct === "true";
     setStatusClass(document.body, correct);
     if (correct) {
-        console.log("Correct answer!");
-    } else {
-        console.log("Wrong answer.");
+        score++; // Öka poängen om svaret är korrekt
     }
     Array.from(answerBtn.children).forEach(button => {
         setStatusClass(button, button.dataset.correct);
     });
-    if (shuffledQuestions.length > currentQuestionIndex + 1){
+    if (shuffledQuestions.length > currentQuestionIndex + 1) {
         nextBtn.classList.remove("hide");
+    } else {
+        showResult(); // Visa resultat om det inte finns fler frågor
     }
-   
 };
 
 function setStatusClass(element, correct) {
@@ -180,9 +179,41 @@ function setStatusClass(element, correct) {
     } else {
         element.classList.add("wrong");
     }
-}
+};
 
 function clearStatusClass (element) {
     element.classList.remove("correct");
     element.classList.remove("wrong");
-}
+};
+
+const resultContainer = document.querySelector("#result-container");
+const resultMessage = document.querySelector("#result-message");
+const resultScore = document.querySelector("#result-score");
+const restartBtn = document.querySelector("#restart-btn");
+
+let score = 0;
+
+function showResult() {
+    const container = document.querySelector(".container");
+    container.classList.add("hide");
+    resultContainer.classList.remove("hide");
+
+    resultScore.innerText = `Du fick ${score} av ${questions.length} rätt!`;
+    if (score === questions.length) {
+        resultMessage.innerText = "Fantastiskt! Du är en sann Harry Potter-expert!";
+    } else if (score > questions.length / 2) {
+        resultMessage.innerText = "Bra jobbat! Du kan mycket om Harry Potter!";
+    } else {
+        resultMessage.innerText = "Det gick inte så bra. Kanske dags att läsa böckerna igen?";
+    }
+};
+
+
+restartBtn.addEventListener("click", () => {
+    score = 0;
+    resultContainer.classList.add("hide");
+    const container = document.querySelector(".container");
+    container.classList.remove("hide"); // Visa frågesektionen igen
+    startBtn.classList.remove("hide");
+});
+
