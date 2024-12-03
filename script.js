@@ -160,7 +160,7 @@ function selectAnswer(e) {
     const correct = selectedButton.dataset.correct === "true";
     setStatusClass(document.body, correct);
     if (correct) {
-        score++; // Öka poängen om svaret är korrekt
+        score++;
     }
     Array.from(answerBtn.children).forEach(button => {
         setStatusClass(button, button.dataset.correct);
@@ -168,7 +168,7 @@ function selectAnswer(e) {
     if (shuffledQuestions.length > currentQuestionIndex + 1) {
         nextBtn.classList.remove("hide");
     } else {
-        showResult(); // Visa resultat om det inte finns fler frågor
+        showResult();
     }
 };
 
@@ -198,22 +198,26 @@ function showResult() {
     container.classList.add("hide");
     resultContainer.classList.remove("hide");
 
-    resultScore.innerText = `Du fick ${score} av ${questions.length} rätt!`;
-    if (score === questions.length) {
-        resultMessage.innerText = "Fantastiskt! Du är en sann Harry Potter-expert!";
-    } else if (score > questions.length / 2) {
-        resultMessage.innerText = "Bra jobbat! Du kan mycket om Harry Potter!";
-    } else {
-        resultMessage.innerText = "Det gick inte så bra. Kanske dags att läsa böckerna igen?";
-    }
-};
+    const scorePercentage = (score / questions.length) * 100;
+    resultScore.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).`;
 
+    // Anpassa meddelande och färg baserat på procent
+    if (scorePercentage < 50) {
+        resultMessage.innerText = "Underkänt. Bättre lycka nästa gång!";
+        resultContainer.style.color = "red"; // Röd färg för underkänt
+    } else if (scorePercentage <= 75) {
+        resultMessage.innerText = "Bra jobbat! Du kan mycket om Harry Potter!";
+        resultContainer.style.color = "orange"; // Orange färg för "Bra"
+    } else {
+        resultMessage.innerText = "Riktigt bra jobbat! Du är en sann Harry Potter-expert!";
+        resultContainer.style.color = "green"; // Grön färg för "Riktigt bra"
+    }
+}
 
 restartBtn.addEventListener("click", () => {
     score = 0;
     resultContainer.classList.add("hide");
     const container = document.querySelector(".container");
-    container.classList.remove("hide"); // Visa frågesektionen igen
+    container.classList.remove("hide");
     startBtn.classList.remove("hide");
 });
-
