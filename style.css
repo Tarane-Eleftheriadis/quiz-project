@@ -1,11 +1,10 @@
 * {
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 :root {
     --primeryFontColor: black;
     --primeryBackgroundColor: white;
     --primertBtnColor: rgb(206, 206, 206);
-    --secondaryBackgroun: white;
     --correctColor: limegreen;
     --wrongColor: red;
 }
@@ -34,7 +33,6 @@ body {
     width: 50px;
     padding: 0;
     border-radius: 50%;
-    background-color: var(--primeryBackgroundColor);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,9 +40,7 @@ body {
     top: 20px;
     right: 20px;
 }
-/* #btn-switch svg{
-    fill: var(--secondaryBackgroundColor)
-} */
+
 #btn-switch svg:last-child{
     display: none;
 }
@@ -63,7 +59,11 @@ body {
     box-shadow: 0 0 10px 2px;
     color: var(--primeryFontColor);
     font-size: 1.5rem;
-   
+}
+h1{
+    font-size: 2rem;
+    border-bottom: 1px solid var(--primeryFontColor);
+    margin-bottom: 10%;
 }
 
 .btn-flex {
@@ -83,15 +83,17 @@ body {
     outline: none;
 }
 
-.btn:hover {
-    border-color: blue;
+.btn:hover:not([disabled]) {
+    background-color: rgb(44, 44, 44);
+    color: white;
+    cursor: pointer;
 }
 
 .btn.correct {
 background-color: var(--correctColor);
 }
 
-.btn.wrong {
+.btn.incorrect {
     background-color: var(--wrongColor);
 }
 
@@ -117,4 +119,4 @@ background-color: var(--correctColor);
     border-radius: 5px;
     box-shadow: 0 0 10px 2px;
     color: var(--primeryFontColor);
-};
+}

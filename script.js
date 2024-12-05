@@ -1,32 +1,25 @@
 // Dark mode
-let darkmode = localStorage.getItem("darkmode");
 const btnSwitch = document.querySelector("#btn-switch");
+let darkmode = localStorage.getItem("darkmode");
 
-const enableDarkmode = () => {
+const darkmodeActive = () => {
     document.body.classList.add("darkmode");
     localStorage.setItem("darkmode", "active");
 };
 
-const disableDarkmode = () => {
+const darkmodeInactive = () => {
     document.body.classList.remove("darkmode");
     localStorage.setItem("darkmode", null);
 };
 
-if (darkmode === "active") enableDarkmode();
-
 btnSwitch.addEventListener("click", () => {
     darkmode = localStorage.getItem("darkmode");
-    darkmode !== "active" ? enableDarkmode() : disableDarkmode();
+    darkmode !== "active" ? darkmodeActive() : darkmodeInactive();
 });
 
-// Quiz
-const startBtn = document.querySelector("#start-btn");
-const nextBtn = document.querySelector("#next-btn");
-const questionContainer = document.querySelector("#question-container");
-const questionElement = document.querySelector("#question");
-const answerBtn = document.querySelector("#answer-buttons");
+if (darkmode === "active") darkmodeActive();
 
-let shuffledQuestions, currentQuestionIndex
+// Quiz
 
 const questions = [
     {
@@ -114,110 +107,143 @@ const questions = [
 
 ];
 
-startBtn.addEventListener("click", startGame);
-nextBtn.addEventListener("click", () => {
-    currentQuestionIndex++
-    setNextQuestion()
-})
+const startBtn = document.querySelector("#start-btn");
+const questionElement = document.querySelector("#question");
+const nextBtn = document.querySelector("#next-btn");
+const answerBtns = document.querySelector("#answer-buttons");
 
-function startGame() {
-    startBtn.classList.add("hide");
-    shuffledQuestions = questions.sort(() => Math.random() - .5)
+let currentQuestionIndex = 0;
+let score = 0;
+
+startBtn.addEventListener("click", startQuiz);
+
+function startQuiz() {
     currentQuestionIndex = 0;
-    questionContainer.classList.remove("hide");
-    setNextQuestion();
-}
+    score = 0;
 
-function setNextQuestion() {
+    startBtn.classList.add("hide");
+    document.querySelector("#question-container").classList.remove("hide");
+    nextBtn.innerText = "Nästa";
+    
+    showQuestion();
+};
+
+function showQuestion() {
     resetState();
-    showQuestion(shuffledQuestions[currentQuestionIndex]);
-}
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionNo = currentQuestionIndex + 1;
+    questionElement.innerText = questionNo + ". " + currentQuestion.question;
 
-function showQuestion(question) {
-    questionElement.innerText = question.question;
-    question.answers.forEach(answer => {
+    currentQuestion.answers.forEach(answer => {
         const button = document.createElement("button");
         button.innerText = answer.text;
         button.classList.add("btn");
+        answerBtns.appendChild(button);
         if (answer.correct) {
             button.dataset.correct = answer.correct;
         }
         button.addEventListener("click", selectAnswer);
-        answerBtn.appendChild(button);
+        
     });
 }
 
 function resetState() {
-    clearStatusClass(document.body)
-    nextBtn.classList.add("hide");
-    while (answerBtn.firstChild) {
-        answerBtn.removeChild(answerBtn.firstChild);
+    nextBtn.style.display = "none";
+    while (answerBtns.firstChild) {
+        answerBtns.removeChild(answerBtns.firstChild);
     }
 }
 
 function selectAnswer(e) {
-    const selectedButton = e.target;
-    const correct = selectedButton.dataset.correct === "true";
-    setStatusClass(document.body, correct);
-    if (correct) {
-        score++;
+    const selectedBtn = e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
+    if (isCorrect) {
+       selectedBtn.classList.add("correct");
+       score++;
+    } else {
+        selectedBtn.classList.add("incorrect")
     }
-    Array.from(answerBtn.children).forEach(button => {
-        setStatusClass(button, button.dataset.correct);
+    Array.from(answerBtns.children).forEach(button => {
+        if(button.dataset.correct === "true"){
+            button.classList.add("correct");
+        }
+        button.disabled = true;
     });
-    if (shuffledQuestions.length > currentQuestionIndex + 1) {
-        nextBtn.classList.remove("hide");
-    } else {
-        showResult();
-    }
+    nextBtn.style.display = "block";
 };
-
-function setStatusClass(element, correct) {
-    clearStatusClass(element)
-    if (correct) {
-        element.classList.add("correct");
-    } else {
-        element.classList.add("wrong");
-    }
-};
-
-function clearStatusClass (element) {
-    element.classList.remove("correct");
-    element.classList.remove("wrong");
-};
-
-const resultContainer = document.querySelector("#result-container");
-const resultMessage = document.querySelector("#result-message");
-const resultScore = document.querySelector("#result-score");
-const restartBtn = document.querySelector("#restart-btn");
-
-let score = 0;
 
 function showResult() {
-    const container = document.querySelector(".container");
-    container.classList.add("hide");
-    resultContainer.classList.remove("hide");
+    resetState();
+    questionElement.innerHTML = `Du fick ${score} av ${questions.length} rätt`;
+    nextBtn.innerHTML = "Spela igen";
+    nextBtn.style.display = "block";
+    document.querySelector(".container").classList.add("hide");
+    document.querySelector("#result-container").classList.remove("hide");
+};
 
-    const scorePercentage = (score / questions.length) * 100;
-    resultScore.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).`;
+function setNextQuestion() {
+   currentQuestionIndex++;
+   if (currentQuestionIndex < questions.length) {
+    showQuestion();
+   } else {
+    showResult();
+   }
+};
 
-    // Anpassa meddelande och färg baserat på procent
-    if (scorePercentage < 50) {
-        resultMessage.innerText = "Underkänt. Bättre lycka nästa gång!";
-        resultContainer.style.color = "red"; // Röd färg för underkänt
-    } else if (scorePercentage <= 75) {
-        resultMessage.innerText = "Bra jobbat! Du kan mycket om Harry Potter!";
-        resultContainer.style.color = "orange"; // Orange färg för "Bra"
-    } else {
-        resultMessage.innerText = "Riktigt bra jobbat! Du är en sann Harry Potter-expert!";
-        resultContainer.style.color = "green"; // Grön färg för "Riktigt bra"
-    }
-}
-
-restartBtn.addEventListener("click", () => {
-    score = 0;
-    resultContainer.classList.add("hide");
-    const container = document.querySelector(".container");
-    container.classList.remove("hide");
-    startBtn.classList.remove("hide");
+nextBtn.addEventListener("click", () => {
+   if(currentQuestionIndex < questions.length){
+    setNextQuestion();
+   } else {
+    startQuiz();
+   }
 });
+
+startQuiz();
+
+
+
+    // const container = document.querySelector(".container");
+    // container.classList.add("hide");
+    // resultContainer.classList.remove("hide");
+
+    // const scorePercentage = (score / questions.length) * 100;
+    // (${Math.round(scorePercentage)}%).;
+   
+
+//     // Anpassa meddelande och färg baserat på procent
+//     if (scorePercentage < 50) {
+//         resultMessage.innerText = "Underkänt. Bättre lycka nästa gång!";
+//         resultContainer.style.color = "red"; // Röd färg för underkänt
+//     } else if (scorePercentage <= 75) {
+//         resultMessage.innerText = "Bra jobbat! Du kan mycket om Harry Potter!";
+//         resultContainer.style.color = "orange"; // Orange färg för "Bra"
+//     } else {
+//         resultMessage.innerText = "Riktigt bra jobbat! Du är en sann Harry Potter-expert!";
+//         resultContainer.style.color = "green"; // Grön färg för "Riktigt bra"
+//     }
+// }
+
+
+
+
+
+
+
+
+
+// function setStatusClass(element, correct) {
+//     clearStatusClass(element)
+//     if (correct) {
+//         element.classList.add("correct");
+//     } else {
+//         element.classList.add("wrong");
+//     }
+// };
+
+
+
+// const resultContainer = document.querySelector("#result-container");
+// const resultMessage = document.querySelector("#result-message");
+// const resultScore = document.querySelector("#result-score");
+// const restartBtn = document.querySelector("#restart-btn");
+
