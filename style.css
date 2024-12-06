@@ -21,6 +21,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
 .darkmode{
     background-image: url("pics/hogwartsschool-dark.jpg");
     --primeryFontColor: white;

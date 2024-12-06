@@ -124,6 +124,8 @@ function startQuiz() {
     startBtn.classList.add("hide");
     document.querySelector("#question-container").classList.remove("hide");
     nextBtn.innerText = "Nästa";
+
+    questionElement.style.color = "";
     
     showQuestion();
 };
@@ -172,15 +174,6 @@ function selectAnswer(e) {
     nextBtn.style.display = "block";
 };
 
-function showResult() {
-    resetState();
-    questionElement.innerHTML = `Du fick ${score} av ${questions.length} rätt`;
-    nextBtn.innerHTML = "Spela igen";
-    nextBtn.style.display = "block";
-    document.querySelector(".container").classList.add("hide");
-    document.querySelector("#result-container").classList.remove("hide");
-};
-
 function setNextQuestion() {
    currentQuestionIndex++;
    if (currentQuestionIndex < questions.length) {
@@ -198,52 +191,23 @@ nextBtn.addEventListener("click", () => {
    }
 });
 
-startQuiz();
+function showResult() {
+    resetState();
+    const scorePercentage = (score / questions.length) * 100;
 
+    // Anpassa meddelande och färg baserat på procent
+    if (scorePercentage < 50) {
+        questionElement.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).  Underkänt. Bättre lycka nästa gång!`;
+        questionElement.style.color = "red"; // Röd färg för underkänt
+    } else if (scorePercentage <= 75) {
+        questionElement.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%). Bra jobbat! Du kan mycket om Harry Potter!`;
+        questionElement.style.color = "orange"; // Orange färg för "Bra"
+    } else {
+        questionElement.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%). Riktigt bra jobbat! Du är en sann Harry Potter-expert!`;
+        questionElement.style.color = "green"; // Grön färg för "Riktigt bra"
+    } 
 
-
-    // const container = document.querySelector(".container");
-    // container.classList.add("hide");
-    // resultContainer.classList.remove("hide");
-
-    // const scorePercentage = (score / questions.length) * 100;
-    // (${Math.round(scorePercentage)}%).;
-   
-
-//     // Anpassa meddelande och färg baserat på procent
-//     if (scorePercentage < 50) {
-//         resultMessage.innerText = "Underkänt. Bättre lycka nästa gång!";
-//         resultContainer.style.color = "red"; // Röd färg för underkänt
-//     } else if (scorePercentage <= 75) {
-//         resultMessage.innerText = "Bra jobbat! Du kan mycket om Harry Potter!";
-//         resultContainer.style.color = "orange"; // Orange färg för "Bra"
-//     } else {
-//         resultMessage.innerText = "Riktigt bra jobbat! Du är en sann Harry Potter-expert!";
-//         resultContainer.style.color = "green"; // Grön färg för "Riktigt bra"
-//     }
-// }
-
-
-
-
-
-
-
-
-
-// function setStatusClass(element, correct) {
-//     clearStatusClass(element)
-//     if (correct) {
-//         element.classList.add("correct");
-//     } else {
-//         element.classList.add("wrong");
-//     }
-// };
-
-
-
-// const resultContainer = document.querySelector("#result-container");
-// const resultMessage = document.querySelector("#result-message");
-// const resultScore = document.querySelector("#result-score");
-// const restartBtn = document.querySelector("#restart-btn");
+    nextBtn.innerHTML = "Spela igen";
+    nextBtn.style.display = "block";
+};
 
