@@ -25,8 +25,8 @@ const questions = [
     {
         question: "Vilket hus blir Harry sorterad i vid Hogwarts?",
         answers: [
-            { text: "Gryffindor", correct: true },
-            { text: "Slytherin", correct: false }
+            { text: "Slytherin", correct: false },
+            { text: "Gryffindor", correct: true }            
         ]
     },
     {
@@ -46,26 +46,26 @@ const questions = [
     {
         question: "Hur många Harry Potter filmer finns det?",
         answers: [
-            {text: "8", correct: true },
-            {text: "7", correct: false}
+            {text: "7", correct: false },
+            {text: "8", correct: true}
         ]
     },
     {
         question: "Vilken är den sista reliken som Harry Potter hittar?",
         answers: [
-            {text: "Äldrestenen", correct: true },
+            {text: "Äldrestenen", correct: false },
             {text: "Osynlighetsmanteln", correct: false},
-            {text: "Fläderstaven", correct: false},
+            {text: "Fläderstaven", correct: true},
             {text: "Snitchbollen", correct: false}
         ]
     },
     {
         question: "Vad heter den trehövdade hunden som vaktar De vises sten?",
         answers: [
-            {text: "Rex", correct: true },
+            {text: "Rex", correct: false },
             {text: "Argos", correct: false},
             {text: "Cerberus", correct: false},
-            {text: "Fluffy", correct: false}
+            {text: "Fluffy", correct: true}
         ]
     },
     {
@@ -81,7 +81,7 @@ const questions = [
         question: "Vilka av dessa är medlemmar i Dumbledores armé? (Finns fler än 1 rätt svar)",
         answers: [
             {text: "Hermione Granger", correct: true },
-            {text: "Neville Longbottom", correct: false},
+            {text: "Neville Longbottom", correct: true},
             {text: "Draco Malfoy", correct: false},
             {text: "Bellatrix Lestrange", correct: false}
         ]
@@ -91,17 +91,17 @@ const questions = [
         answers: [
             {text: "Tom Riddles dagbok", correct: true },
             {text: "Fläderstaven", correct: false},
-            {text: "Harry Potter", correct: false},
-            {text: "Salazar Slytherins medaljong", correct: false}
+            {text: "Harry Potter", correct: true},
+            {text: "Salazar Slytherins medaljong", correct: true}
         ]
     },
     {
         question: "Vilka djur kan ses som patronusformer i filmerna? (Finns fler än 1 rätt svar)",
         answers: [
             {text: "Hjort", correct: true },
-            {text: "Utter", correct: false},
-            {text: "Fenix", correct: false},
-            {text: "Varg", correct: false}
+            {text: "Utter", correct: true},
+            {text: "Fenix", correct: true},
+            {text: "Varg", correct: true}
         ]
     }
 

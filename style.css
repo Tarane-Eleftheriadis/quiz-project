@@ -113,6 +113,26 @@ background-color: var(--correctColor);
 .hide {
     display: none;
 }
+
+.checkbox {
+    font-size: 1rem;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+#answer-buttons.btn-flex{
+    font-size: 1rem;
+    accent-color: slategrey;
+}
+
+.checkbox.correct {
+    color: var(--correctColor);
+}
+
+.checkbox.incorrect {
+    color: var(--wrongColor);
+}
+
 #result-container {
     text-align: center;
     padding: 20px;
