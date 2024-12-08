@@ -72,7 +72,7 @@ const questions = [
         question: "Vad heter Harrys uggla?",
         answers: [
             {text: "Hedwig", correct: true },
-            {text: "Errol", correct: false},
+            {text: "Nymphadora Tonks", correct: false},
             {text: "Pigwidgeon", correct: false},
             {text: "Fawkes", correct: false}
         ]
@@ -80,7 +80,7 @@ const questions = [
     {
         question: "Vilka av dessa är medlemmar i Dumbledores armé? (Finns fler än 1 rätt svar)",
         answers: [
-            {text: "Hermione Granger", correct: true },
+            {text: "Ginny Weasley", correct: true },
             {text: "Neville Longbottom", correct: true},
             {text: "Draco Malfoy", correct: false},
             {text: "Bellatrix Lestrange", correct: false}
@@ -90,18 +90,18 @@ const questions = [
         question: "Vilka av dessa är Horrokruxer? (Finns fler än 1 rätt svar)",
         answers: [
             {text: "Tom Riddles dagbok", correct: true },
-            {text: "Fläderstaven", correct: false},
+            {text: "Nagini", correct: true},
             {text: "Harry Potter", correct: true},
-            {text: "Salazar Slytherins medaljong", correct: true}
+            {text: "Fläderstaven", correct: false}
         ]
     },
     {
         question: "Vilka djur kan ses som patronusformer i filmerna? (Finns fler än 1 rätt svar)",
         answers: [
-            {text: "Hjort", correct: true },
+            {text: "Ulllig mammut", correct: true },
             {text: "Utter", correct: true},
-            {text: "Fenix", correct: true},
-            {text: "Varg", correct: true}
+            {text: "Fågel Fenix", correct: true},
+            {text: "Jack Russell terrier", correct: true}
         ]
     }
 
@@ -136,17 +136,68 @@ function showQuestion() {
     let questionNo = currentQuestionIndex + 1;
     questionElement.innerText = questionNo + ". " + currentQuestion.question;
 
+    const multipleAnswers = currentQuestion.answers.filter(answer => answer.correct).length > 1;
+
     currentQuestion.answers.forEach(answer => {
-        const button = document.createElement("button");
-        button.innerText = answer.text;
-        button.classList.add("btn");
-        answerBtns.appendChild(button);
-        if (answer.correct) {
+        if (multipleAnswers) {
+            let container = document.createElement("label");
+            container.classList.add("checkbox");
+
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.dataset.correct = answer.correct;
+
+            container.appendChild(document.createTextNode(answer.text));
+            container.appendChild(checkbox);
+
+            answerBtns.appendChild(container);
+        } else {
+            const button = document.createElement("button");
+            button.innerText = answer.text;
+            button.classList.add("btn");
+            answerBtns.appendChild(button);
+            if (answer.correct) {
             button.dataset.correct = answer.correct;
+            }
+            button.addEventListener("click", selectAnswer);
         }
-        button.addEventListener("click", selectAnswer);
-        
     });
+
+    if (multipleAnswers) {
+        const submitBtn = document.createElement("button");
+        submitBtn.classList.add("submitbtn");
+        submitBtn.innerText = "Bekräfta";
+        submitBtn.addEventListener("click", submitAnswers);
+        answerBtns.appendChild(submitBtn);
+    }
+}
+
+function submitAnswers() {
+    validateCheckboxAnswers();
+
+    const submitBtn = answerBtns.querySelector(".submitbtn");
+    if (submitBtn) {
+        submitBtn.remove();
+    }
+}
+
+function validateCheckboxAnswers() {
+    const selectedCheckboxes = Array.from(answerBtns.querySelectorAll("input[type='checkbox']"));
+    let allCorrect = true;
+
+    selectedCheckboxes.forEach(checkbox => {
+        if (checkbox.dataset.correct === "true") {
+            if (!checkbox.checked) allCorrect = false;
+            checkbox.parentElement.classList.add("correct");
+        } else if (checkbox.checked) {
+            allCorrect = false;
+            checkbox.parentElement.classList.add("incorrect");
+        }
+        checkbox.disabled = true;
+    });
+
+    if (allCorrect) score++;
+    nextBtn.style.display = "block";
 }
 
 function resetState() {

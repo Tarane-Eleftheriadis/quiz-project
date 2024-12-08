@@ -29,7 +29,7 @@ body {
     --primertBtnColor: rgb(102, 102, 102);
 
 }
-#btn-switch{
+#btn-switch {
     height: 50px;
     width: 50px;
     padding: 0;
@@ -116,7 +116,15 @@ background-color: var(--correctColor);
 
 .checkbox {
     font-size: 1rem;
-    margin: 5px 0;
+    background-color: var(--primertBtnColor);
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: var(--primeryFontColor);    
+    cursor: pointer;
+}
+.checkbox:hover:not([disabled]) {
+    background-color: rgb(44, 44, 44);
+    color: white;
     cursor: pointer;
 }
 
@@ -140,4 +148,21 @@ background-color: var(--correctColor);
     border-radius: 5px;
     box-shadow: 0 0 10px 2px;
     color: var(--primeryFontColor);
+}
+
+.submitbtn {
+    font-size: 1.5rem;
+    background-color: var(--primertBtnColor); 
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: var(--primeryFontColor);
+    margin: auto;
+    margin-top: 4%;
+}
+
+.submitbtn:hover:not([disabled]) {
+    background-color: rgb(44, 44, 44);
+    color: white;
+    cursor: pointer;
 }
