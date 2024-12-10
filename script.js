@@ -244,21 +244,63 @@ nextBtn.addEventListener("click", () => {
 
 function showResult() {
     resetState();
+
+    // Hämta container-elementet
+    const container = document.querySelector(".container");
+    container.innerHTML = ""; // Rensa tidigare innehåll
+
+    // Rubrik för resultatet
+    const resultHeading = document.createElement("h1");
+    resultHeading.innerText = "Resultat";
+    container.appendChild(resultHeading);
+
+    // Resultatmeddelande
+    const resultMessage = document.createElement("p");
     const scorePercentage = (score / questions.length) * 100;
-
-    // Anpassa meddelande och färg baserat på procent
     if (scorePercentage < 50) {
-        questionElement.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).  Underkänt. Bättre lycka nästa gång!`;
-        questionElement.style.color = "red"; // Röd färg för underkänt
-    } else if (scorePercentage <= 75) {
-        questionElement.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%). Bra jobbat! Du kan mycket om Harry Potter!`;
-        questionElement.style.color = "orange"; // Orange färg för "Bra"
+        resultMessage.innerText = `Underkänt! Bättre lycka nästa gång!`;
+        resultMessage.style.color = "red";
+    } else if (scorePercentage < 75) {
+        resultMessage.innerText = `Bra jobbat! Du kan mycket om Harry Potter!`;
+        resultMessage.style.color = "orange";
     } else {
-        questionElement.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%). Riktigt bra jobbat! Du är en sann Harry Potter-expert!`;
-        questionElement.style.color = "green"; // Grön färg för "Riktigt bra"
-    } 
+        resultMessage.innerText = `Riktigt bra jobbat! Du är en sann Harry Potter-expert!`;
+        resultMessage.style.color = "green";
+    }
+    container.appendChild(resultMessage);
 
-    nextBtn.innerHTML = "Spela igen";
-    nextBtn.style.display = "block";
-};
+    // Resultatpoäng
+    const resultScore = document.createElement("p");
+    resultScore.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).`;
+    container.appendChild(resultScore);
+
+    // Detaljerade frågor och svar
+    questions.forEach((q, index) => {
+        const questionDiv = document.createElement("div");
+        questionDiv.classList.add("question-div");
+
+        const questionText = document.createElement("p");
+        questionText.innerText = `${index + 1}. ${q.question}`;
+        questionText.style.fontWeight = "bold";
+        questionDiv.appendChild(questionText);
+
+        q.answers.forEach(answer => {
+            const answerText = document.createElement("p");
+            answerText.innerText = `- ${answer.text} ${answer.correct ? "(Rätt svar)" : ""}`;
+            answerText.style.color = answer.correct ? "limegreen" : "red";
+            questionDiv.appendChild(answerText);
+        });
+
+        container.appendChild(questionDiv);
+    });
+
+    // Lägg till en spela igen-knapp
+    const restartBtn = document.createElement("button");
+    restartBtn.classList.add("btn");
+    restartBtn.innerText = "Spela igen";
+    restartBtn.addEventListener("click", startQuiz);
+    container.appendChild(restartBtn);
+}
+
+
 
