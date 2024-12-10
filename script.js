@@ -125,14 +125,14 @@ function startQuiz() {
 
     startBtn.classList.add("hide");
     document.querySelector("#question-container").classList.remove("hide");
-
-    // questionDiv.style.color = "";
     
     showQuestion();
 };
 
 function showQuestion() {
+    //Tar bort nästa-knapp och rensar textinnehåll i svars-knapp
     cleanUp();
+
     //Visar vilket nummer och själva frågan som skall visas
     let currentQuestion = questions[currentQuestionIndex];
     let questionNo = currentQuestionIndex + 1;
@@ -160,9 +160,9 @@ function showQuestion() {
             answerbtn.classList.add("btn");
             
             answerBtnsDiv.append(answerbtn);
-            if (answer.correct) {
+          
             answerbtn.dataset.correct = answer.correct;
-            }
+        
             answerbtn.addEventListener("click", selectAnswer);
         }
     });
@@ -296,7 +296,9 @@ function showResult() {
     let restartBtn = document.createElement("button");
     restartBtn.classList.add("btn");
     restartBtn.innerText = "Spela igen";
-    restartBtn.addEventListener("click", startQuiz);
+    restartBtn.addEventListener("click", () => {
+        location.reload();
+    });
     container.appendChild(restartBtn);
 }
 
