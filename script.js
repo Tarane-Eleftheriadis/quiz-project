@@ -4,50 +4,50 @@ let darkmode = localStorage.getItem("darkmode");
 
 const darkmodeActive = () => {
     document.body.classList.add("darkmode");
-    localStorage.setItem("darkmode", "active");
+    localStorage.setItem("darkmode", "true");
 };
 
 const darkmodeInactive = () => {
     document.body.classList.remove("darkmode");
-    localStorage.setItem("darkmode", null);
+    localStorage.setItem("darkmode", "false");
 };
 
 btnSwitch.addEventListener("click", () => {
     darkmode = localStorage.getItem("darkmode");
-    darkmode !== "active" ? darkmodeActive() : darkmodeInactive();
+    darkmode !== "true" ? darkmodeActive() : darkmodeInactive();
 });
 
-if (darkmode === "active") darkmodeActive();
+if (darkmode === "true") darkmodeActive();
 
 // Quiz
 
 const questions = [
     {
-        question: "Vilket hus blir Harry sorterad i vid Hogwarts?",
+        question: "Blir Harry sorterad i Gryffindor vid Hogwarts?",
         answers: [
-            { text: "Slytherin", correct: false },
-            { text: "Gryffindor", correct: true }            
+            { text: "Falskt", correct: false },
+            { text: "Sant", correct: true }            
         ]
     },
     {
         question: "Är Severus Snape en medlem av Dödsätarna?",
         answers: [
-            {text: "Ja", correct: true },
-            {text: "Nej", correct: false}
+            {text: "Sant", correct: true },
+            {text: "Falskt", correct: false}
         ]
     },
     {
-        question: "Vad är Dobby?",
+        question: "Är Dobby en råtta?",
         answers: [
-            {text: "En husalf", correct: true },
-            {text: "En råtta", correct: false}
+            {text: "Falskt", correct: true },
+            {text: "Sant", correct: false}
         ]
     },
     {
-        question: "Hur många Harry Potter filmer finns det?",
+        question: "Finns det 9 Harry Potter filmer?",
         answers: [
-            {text: "7", correct: false },
-            {text: "8", correct: true}
+            {text: "Sant", correct: false },
+            {text: "Falskt", correct: true}
         ]
     },
     {
@@ -107,12 +107,14 @@ const questions = [
 
 ];
 
+const questionDiv = document.querySelector("#question");
+const answerBtnsDiv = document.querySelector("#answer-buttons-div");
 const startBtn = document.querySelector("#start-btn");
-const questionElement = document.querySelector("#question");
 const nextBtn = document.querySelector("#next-btn");
-const answerBtns = document.querySelector("#answer-buttons");
 
+//Vilken fråga som visas
 let currentQuestionIndex = 0;
+//Poängräknare
 let score = 0;
 
 startBtn.addEventListener("click", startQuiz);
@@ -123,43 +125,45 @@ function startQuiz() {
 
     startBtn.classList.add("hide");
     document.querySelector("#question-container").classList.remove("hide");
-    nextBtn.innerText = "Nästa";
 
-    questionElement.style.color = "";
+    // questionDiv.style.color = "";
     
     showQuestion();
 };
 
 function showQuestion() {
-    resetState();
+    cleanUp();
+    //Visar vilket nummer och själva frågan som skall visas
     let currentQuestion = questions[currentQuestionIndex];
     let questionNo = currentQuestionIndex + 1;
-    questionElement.innerText = questionNo + ". " + currentQuestion.question;
+    questionDiv.innerText = questionNo + ". " + currentQuestion.question;
 
+    //Kollar om det finns fler än 1 rätt
     const multipleAnswers = currentQuestion.answers.filter(answer => answer.correct).length > 1;
 
     currentQuestion.answers.forEach(answer => {
         if (multipleAnswers) {
-            let container = document.createElement("label");
-            container.classList.add("checkbox");
+            let labelContainer = document.createElement("label");
+            labelContainer.classList.add("label");
 
-            let checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.dataset.correct = answer.correct;
+            let inputCheckbox = document.createElement("input");
+            inputCheckbox.type = "checkbox";
+            inputCheckbox.dataset.correct = answer.correct;
 
-            container.appendChild(document.createTextNode(answer.text));
-            container.appendChild(checkbox);
+            labelContainer.append(document.createTextNode(answer.text));
+            labelContainer.append(inputCheckbox);
 
-            answerBtns.appendChild(container);
+            answerBtnsDiv.append(labelContainer);
         } else {
-            const button = document.createElement("button");
-            button.innerText = answer.text;
-            button.classList.add("btn");
-            answerBtns.appendChild(button);
+            const answerbtn = document.createElement("button");
+            answerbtn.innerText = answer.text;
+            answerbtn.classList.add("btn");
+            
+            answerBtnsDiv.append(answerbtn);
             if (answer.correct) {
-            button.dataset.correct = answer.correct;
+            answerbtn.dataset.correct = answer.correct;
             }
-            button.addEventListener("click", selectAnswer);
+            answerbtn.addEventListener("click", selectAnswer);
         }
     });
 
@@ -168,21 +172,21 @@ function showQuestion() {
         submitBtn.classList.add("submitbtn");
         submitBtn.innerText = "Bekräfta";
         submitBtn.addEventListener("click", submitAnswers);
-        answerBtns.appendChild(submitBtn);
+        answerBtnsDiv.append(submitBtn);
     }
 }
 
 function submitAnswers() {
-    validateCheckboxAnswers();
+    validate();
 
-    const submitBtn = answerBtns.querySelector(".submitbtn");
+    const submitBtn = answerBtnsDiv.querySelector(".submitbtn");
     if (submitBtn) {
         submitBtn.remove();
     }
 }
 
-function validateCheckboxAnswers() {
-    const selectedCheckboxes = Array.from(answerBtns.querySelectorAll("input[type='checkbox']"));
+function validate() {
+    const selectedCheckboxes = Array.from(answerBtnsDiv.querySelectorAll("input[type='checkbox']"));
     let allCorrect = true;
 
     selectedCheckboxes.forEach(checkbox => {
@@ -200,11 +204,9 @@ function validateCheckboxAnswers() {
     nextBtn.style.display = "block";
 }
 
-function resetState() {
+function cleanUp() {
     nextBtn.style.display = "none";
-    while (answerBtns.firstChild) {
-        answerBtns.removeChild(answerBtns.firstChild);
-    }
+    answerBtnsDiv.innerText = "";
 }
 
 function selectAnswer(e) {
@@ -216,7 +218,7 @@ function selectAnswer(e) {
     } else {
         selectedBtn.classList.add("incorrect")
     }
-    Array.from(answerBtns.children).forEach(button => {
+    Array.from(answerBtnsDiv.children).forEach(button => {
         if(button.dataset.correct === "true"){
             button.classList.add("correct");
         }
@@ -243,25 +245,22 @@ nextBtn.addEventListener("click", () => {
 });
 
 function showResult() {
-    resetState();
+    cleanUp();
 
-    // Hämta container-elementet
     const container = document.querySelector(".container");
-    container.innerHTML = ""; // Rensa tidigare innehåll
+    container.innerHTML = "";
 
-    // Rubrik för resultatet
-    const resultHeading = document.createElement("h1");
-    resultHeading.innerText = "Resultat";
-    container.appendChild(resultHeading);
+    const resultH1 = document.createElement("h1");
+    resultH1.innerText = "Resultat";
+    container.appendChild(resultH1);
 
-    // Resultatmeddelande
     const resultMessage = document.createElement("p");
     const scorePercentage = (score / questions.length) * 100;
     if (scorePercentage < 50) {
-        resultMessage.innerText = `Underkänt! Bättre lycka nästa gång!`;
+        resultMessage.innerText = `Underkänt - Bättre lycka nästa gång!`;
         resultMessage.style.color = "red";
     } else if (scorePercentage < 75) {
-        resultMessage.innerText = `Bra jobbat! Du kan mycket om Harry Potter!`;
+        resultMessage.innerText = `Bra jobbat!`;
         resultMessage.style.color = "orange";
     } else {
         resultMessage.innerText = `Riktigt bra jobbat! Du är en sann Harry Potter-expert!`;
@@ -274,7 +273,6 @@ function showResult() {
     resultScore.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).`;
     container.appendChild(resultScore);
 
-    // Detaljerade frågor och svar
     questions.forEach((q, index) => {
         const questionDiv = document.createElement("div");
         questionDiv.classList.add("question-div");
@@ -294,8 +292,8 @@ function showResult() {
         container.appendChild(questionDiv);
     });
 
-    // Lägg till en spela igen-knapp
-    const restartBtn = document.createElement("button");
+    // Spela igen
+    let restartBtn = document.createElement("button");
     restartBtn.classList.add("btn");
     restartBtn.innerText = "Spela igen";
     restartBtn.addEventListener("click", startQuiz);
