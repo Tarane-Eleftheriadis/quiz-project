@@ -7,6 +7,7 @@
     --primertBtnColor: rgb(206, 206, 206);
     --correctColor: limegreen;
     --wrongColor: red;
+    --bottomBorder: grey;
 }
 
 body {
@@ -25,6 +26,7 @@ body {
     --primeryFontColor: white;
     --primeryBackgroundColor: black;
     --primertBtnColor: rgb(102, 102, 102);
+    --bottomBorder: white;
 
 }
 #btn-switch {
@@ -41,15 +43,26 @@ body {
     cursor: pointer;
 }
 
-#btn-switch svg:last-child{
-    display: none;
-}
-.darkmode #btn-switch svg:first-child{
-    display: none;
-}
-.darkmode #btn-switch svg:last-child{
+.light-icon{
     display: block;
 }
+.dark-icon{
+    display: none;
+}
+.darkmode .light-icon{
+    display: none;
+}
+.darkmode .dark-icon{
+    display: block;
+}
+.themesong{
+    position: fixed;
+    top: 20px;
+    right: 80px;
+    height: 50px;
+    width: 115px; 
+}
+
 .container{
     width: 400px;
     max-height: 400px;
@@ -74,7 +87,7 @@ h1{
     margin: 20px 0;
 }
 
-.btn {
+.btn, .label {
     font-size: 1rem;
     background-color: var(--primertBtnColor); 
     border: none;
@@ -82,19 +95,30 @@ h1{
     padding: 10px 20px;
     color: var(--primeryFontColor);
     outline: none;
+    cursor: pointer;
+}
+.submitbtn {
+    font-size: 1.5rem;
+    background-color: var(--primertBtnColor); 
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: var(--primeryFontColor);
+    margin: auto;
+    margin-top: 4%;
 }
 
-.btn:hover:not([disabled]) {
+.btn:hover:not([disabled]), .label:hover, .submitbtn:hover{
     background-color: rgb(44, 44, 44);
     color: white;
     cursor: pointer;
 }
 
-.btn.correct {
-background-color: var(--correctColor);
+.btn.correct, .label.correct {
+    background-color: var(--correctColor);
 }
 
-.btn.incorrect {
+.btn.incorrect, .label.incorrect {
     background-color: var(--wrongColor);
 }
 
@@ -114,31 +138,9 @@ background-color: var(--correctColor);
     display: none;
 }
 
-.label {
-    font-size: 1rem;
-    background-color: var(--primertBtnColor);
-    border-radius: 5px;
-    padding: 10px 20px;
-    color: var(--primeryFontColor);    
-    cursor: pointer;
-}
-.label:hover:not([disabled]) {
-    background-color: rgb(44, 44, 44);
-    color: white;
-    cursor: pointer;
-}
-
 #answer-buttons.btn-flex{
     font-size: 1rem;
     accent-color: slategrey;
-}
-
-.label.correct {
-    color: var(--correctColor);
-}
-
-.label.incorrect {
-    color: var(--wrongColor);
 }
 
 #result-container {
@@ -150,26 +152,13 @@ background-color: var(--correctColor);
     color: var(--primeryFontColor);
 }
 
-.submitbtn {
-    font-size: 1.5rem;
-    background-color: var(--primertBtnColor); 
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    color: var(--primeryFontColor);
-    margin: auto;
-    margin-top: 4%;
-}
-
-.submitbtn:hover:not([disabled]) {
-    background-color: rgb(44, 44, 44);
-    color: white;
-    cursor: pointer;
-}
-
 .question-div {
     font-size: 1rem;
     margin-bottom: 15px;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px dashed var(--bottomBorder);
     padding-bottom: 10px;
+
+    p{
+        padding: 2%;
+    }
 }

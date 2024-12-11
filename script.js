@@ -116,6 +116,8 @@ const nextBtn = document.querySelector("#next-btn");
 let currentQuestionIndex = 0;
 //Poängräknare
 let score = 0;
+//Användarens svar
+let userAnswers = [];
 
 startBtn.addEventListener("click", startQuiz);
 
@@ -130,7 +132,6 @@ function startQuiz() {
 };
 
 function showQuestion() {
-    //Tar bort nästa-knapp och rensar textinnehåll i svars-knapp
     cleanUp();
 
     //Visar vilket nummer och själva frågan som skall visas
@@ -186,9 +187,14 @@ function submitAnswers() {
 }
 
 function validate() {
+    //skapar en array av samtliga checkboxar
     const selectedCheckboxes = Array.from(answerBtnsDiv.querySelectorAll("input[type='checkbox']"));
     let allCorrect = true;
 
+    //// Spara användarens val
+    userAnswers[currentQuestionIndex] = selectedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.parentElement.textContent.trim());
+
+    //Går igenom en checkbox i taget
     selectedCheckboxes.forEach(checkbox => {
         if (checkbox.dataset.correct === "true") {
             if (!checkbox.checked) allCorrect = false;
@@ -197,21 +203,30 @@ function validate() {
             allCorrect = false;
             checkbox.parentElement.classList.add("incorrect");
         }
+        //Låser lådorna
         checkbox.disabled = true;
     });
 
+    //Om ALLA lådor är rätt, ger det poäng
     if (allCorrect) score++;
     nextBtn.style.display = "block";
 }
 
 function cleanUp() {
+    //Tar bort nästa-knapp och rensar textinnehåll i svars-knapp
     nextBtn.style.display = "none";
     answerBtnsDiv.innerText = "";
 }
 
 function selectAnswer(e) {
+    //Vilken knapp som klickas
     const selectedBtn = e.target;
+    //Kollar om rätt samt färgar grön/röd
     const isCorrect = selectedBtn.dataset.correct === "true";
+
+    //Sparar svaret
+    userAnswers[currentQuestionIndex] = selectedBtn.innerText;
+
     if (isCorrect) {
        selectedBtn.classList.add("correct");
        score++;
@@ -227,6 +242,12 @@ function selectAnswer(e) {
     nextBtn.style.display = "block";
 };
 
+nextBtn.addEventListener("click", () => {
+    if(currentQuestionIndex < questions.length){
+     setNextQuestion();
+    } 
+ });
+
 function setNextQuestion() {
    currentQuestionIndex++;
    if (currentQuestionIndex < questions.length) {
@@ -235,14 +256,6 @@ function setNextQuestion() {
     showResult();
    }
 };
-
-nextBtn.addEventListener("click", () => {
-   if(currentQuestionIndex < questions.length){
-    setNextQuestion();
-   } else {
-    startQuiz();
-   }
-});
 
 function showResult() {
     cleanUp();
@@ -254,16 +267,17 @@ function showResult() {
     resultH1.innerText = "Resultat";
     container.appendChild(resultH1);
 
+    //Resultat text
     const resultMessage = document.createElement("p");
     const scorePercentage = (score / questions.length) * 100;
     if (scorePercentage < 50) {
-        resultMessage.innerText = `Underkänt - Bättre lycka nästa gång!`;
+        resultMessage.innerText = `Underkänt - Det där gick ju inte så bra.... DISQUALIAMOUS!`;
         resultMessage.style.color = "red";
     } else if (scorePercentage < 75) {
-        resultMessage.innerText = `Bra jobbat!`;
+        resultMessage.innerText = `Bra jobbat, men jag tror du kan bättre - Replayious!`;
         resultMessage.style.color = "orange";
     } else {
-        resultMessage.innerText = `Riktigt bra jobbat! Du är en sann Harry Potter-expert!`;
+        resultMessage.innerText = `Riktigt bra jobbat! Du är en sann Harry Potter expert - EXCELLENTUS!`;
         resultMessage.style.color = "green";
     }
     container.appendChild(resultMessage);
@@ -273,6 +287,7 @@ function showResult() {
     resultScore.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).`;
     container.appendChild(resultScore);
 
+    //Frågor och svar
     questions.forEach((q, index) => {
         const questionDiv = document.createElement("div");
         questionDiv.classList.add("question-div");
@@ -284,11 +299,27 @@ function showResult() {
 
         q.answers.forEach(answer => {
             const answerText = document.createElement("p");
-            answerText.innerText = `- ${answer.text} ${answer.correct ? "(Rätt svar)" : ""}`;
+            answerText.innerText = `- ${answer.text}`;
             answerText.style.color = answer.correct ? "limegreen" : "red";
             questionDiv.appendChild(answerText);
-        });
 
+            // Markera användarens val
+            if (userAnswers[index]) {
+                if (Array.isArray(userAnswers[index])) {
+                    // Checkbox-fråga
+                    if (userAnswers[index].includes(answer.text)) {
+                        answerText.style.fontWeight = "bold";
+                        answerText.style.border = "2px solid yellow";
+                    }
+                } else if (userAnswers[index] === answer.text) {
+                    // Enkelval-fråga
+                    answerText.style.fontWeight = "bold";
+                    answerText.style.border = "2px solid yellow";
+                }
+            }
+
+            questionDiv.appendChild(answerText);
+        });
         container.appendChild(questionDiv);
     });
 
@@ -300,7 +331,8 @@ function showResult() {
         location.reload();
     });
     container.appendChild(restartBtn);
-}
+
+    }
 
 
 
