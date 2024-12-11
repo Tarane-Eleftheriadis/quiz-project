@@ -1,5 +1,6 @@
 // Dark mode
 const btnSwitch = document.querySelector("#btn-switch");
+// Hämta värde från webbläsarens localStorage
 let darkmode = localStorage.getItem("darkmode");
 
 const darkmodeActive = () => {
@@ -142,6 +143,7 @@ function showQuestion() {
     //Kollar om det finns fler än 1 rätt
     const multipleAnswers = currentQuestion.answers.filter(answer => answer.correct).length > 1;
 
+    //Skapar checkbox el knapp
     currentQuestion.answers.forEach(answer => {
         if (multipleAnswers) {
             let labelContainer = document.createElement("label");
@@ -178,6 +180,7 @@ function showQuestion() {
 }
 
 function submitAnswers() {
+    //validerar svar samt tar bort knappen
     validate();
 
     const submitBtn = answerBtnsDiv.querySelector(".submitbtn");
@@ -221,18 +224,20 @@ function cleanUp() {
 function selectAnswer(e) {
     //Vilken knapp som klickas
     const selectedBtn = e.target;
-    //Kollar om rätt samt färgar grön/röd
+    //Kollar om rätt svar
     const isCorrect = selectedBtn.dataset.correct === "true";
 
     //Sparar svaret
     userAnswers[currentQuestionIndex] = selectedBtn.innerText;
 
+    //Sätter klass och poäng (vid rätt)
     if (isCorrect) {
        selectedBtn.classList.add("correct");
        score++;
     } else {
         selectedBtn.classList.add("incorrect")
     }
+    //Visa rätt svar och gör alla knappar inaktiva
     Array.from(answerBtnsDiv.children).forEach(button => {
         if(button.dataset.correct === "true"){
             button.classList.add("correct");
@@ -265,7 +270,7 @@ function showResult() {
 
     const resultH1 = document.createElement("h1");
     resultH1.innerText = "Resultat";
-    container.appendChild(resultH1);
+    container.append(resultH1);
 
     //Resultat text
     const resultMessage = document.createElement("p");
@@ -280,12 +285,12 @@ function showResult() {
         resultMessage.innerText = `Riktigt bra jobbat! Du är en sann Harry Potter expert - EXCELLENTUS!`;
         resultMessage.style.color = "green";
     }
-    container.appendChild(resultMessage);
+    container.append(resultMessage);
 
     // Resultatpoäng
     const resultScore = document.createElement("p");
-    resultScore.innerText = `Du fick ${score} av ${questions.length} rätt (${Math.round(scorePercentage)}%).`;
-    container.appendChild(resultScore);
+    resultScore.innerText = `Du fick ${score} av ${questions.length} rätt (${scorePercentage}%).`;
+    container.append(resultScore);
 
     //Frågor och svar
     questions.forEach((q, index) => {
@@ -295,13 +300,13 @@ function showResult() {
         const questionText = document.createElement("p");
         questionText.innerText = `${index + 1}. ${q.question}`;
         questionText.style.fontWeight = "bold";
-        questionDiv.appendChild(questionText);
+        questionDiv.append(questionText);
 
         q.answers.forEach(answer => {
             const answerText = document.createElement("p");
             answerText.innerText = `- ${answer.text}`;
             answerText.style.color = answer.correct ? "limegreen" : "red";
-            questionDiv.appendChild(answerText);
+            questionDiv.append(answerText);
 
             // Markera användarens val
             if (userAnswers[index]) {
@@ -318,9 +323,9 @@ function showResult() {
                 }
             }
 
-            questionDiv.appendChild(answerText);
+            questionDiv.append(answerText);
         });
-        container.appendChild(questionDiv);
+        container.append(questionDiv);
     });
 
     // Spela igen
@@ -330,7 +335,7 @@ function showResult() {
     restartBtn.addEventListener("click", () => {
         location.reload();
     });
-    container.appendChild(restartBtn);
+    container.append(restartBtn);
 
     }
 
